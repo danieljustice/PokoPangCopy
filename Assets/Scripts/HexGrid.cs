@@ -38,8 +38,7 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
-        //hexMesh.Triangulate(cells);
-        //innerHexMesh.Triangulate(cells);
+ 
     }
 
 
@@ -124,17 +123,23 @@ public class HexGrid : MonoBehaviour
                 if (x < width - 1)
                 {
                     cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
-                    cell.SetNeighbor(HexDirection.NW, cells[i - 1]);
-                }
+                    
+                }   
             }
             if(x == 0)
             {
                 cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
             }
+
+         
             //else
             //{
             //    cell.SetNeighbor(HexDirection.NW, cells[i - 1]);
             //}
+        }
+        if ((x & 1) == 0 && x != 0)
+        {
+            cell.SetNeighbor(HexDirection.NW, cells[i - 1]);
         }
     }
    
@@ -174,7 +179,8 @@ public class HexGrid : MonoBehaviour
         //super ugly equation that parses the hex's X,Z coordinates and 
         //finds its index on the cells array
         int index = (coordinates.Z + coordinates.X / 2) * width + coordinates.X;
-        if (index < cells.Length && index  > 0)
+        print("index: " + index);
+        if (index < cells.Length && index  >= 0)
         {
             return cells[index];
         }
@@ -191,8 +197,7 @@ public class HexGrid : MonoBehaviour
         {
             HandleInput();
         }
-        else if (Input.GetMouseButtonUp(0) &&
-            !EventSystem.current.IsPointerOverGameObject())
+        else if (Input.GetMouseButtonUp(0))
         {
             EndMove();   
         }
@@ -237,7 +242,7 @@ public class HexGrid : MonoBehaviour
                         hitCell.outerColor = defaultColor;
                         hexMesh.Triangulate(cells);
                         innerHexMesh.Triangulate(cells);
-                        print("pushed  " + hitCell.coordinates.ToString());
+                        //print("pushed  " + hitCell.coordinates.ToString());
                     }else if (topCell.IsNeighbor(hitCell))
                     {
                         while(topCell != hitCell)
