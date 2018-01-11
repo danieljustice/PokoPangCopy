@@ -57,6 +57,44 @@ public class HexGrid : MonoBehaviour
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.color = defaultColor;
 
+        //set neighbors
+        //if not on the bottom row, then set the S && N neighbors
+        if(i/width > 0)
+        {
+            cell.SetNeighbor(HexDirection.S, cells[i - width]);
+        }
+        //set SW and NE neighbors
+        //if i am not all the way to the right of the board
+        if (x > 0)
+        {
+            //if it is an even col
+            if((x & 1) == 0)
+            {
+                //if not on bottom row
+                if (i/width > 0)
+                {
+                    cell.SetNeighbor(HexDirection.SW, cells[i - width - 1]);
+                }
+            }
+            //else if odd col
+            else
+            {
+                cell.SetNeighbor(HexDirection.SW, cells[i - 1]);
+            }
+        }
+
+        //set SE and NW neighbors
+        //if not on bottom row
+        if (i/width > 0)
+        {
+            //if not on far right corner
+            if(x < width - 1)
+            {
+                cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
+            }
+        }
+        
+
         //position overlay for development purposes
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
@@ -65,33 +103,31 @@ public class HexGrid : MonoBehaviour
     }
 
 
-    //move to its own script soon
-    void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            HandleInput();
-        }
-    }
-
-    void HandleInput()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            TouchCell(hit.point);
-        }
-    }
+   
 
     void TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         //Debug.Log("touched at " + coordinates.ToString());
-        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+        //super ugly equation that parses the hex's X,Z coordinates and 
+        //finds its index on the cells array
+        int index = (coordinates.Z+ coordinates.X/2) * height + coordinates.X;//+ coordinates.Z * width + coordinates.Z / 2;
         HexCell cell = cells[index];
         cell.color = touchedColor;
+        hexMesh.Triangulate(cells);
+    }
+
+    public void ColorCell(Vector3 position, Color color)
+    {
+        position = transform.InverseTransformPoint(position);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        //Debug.Log("touched at " + coordinates.ToString());
+        //super ugly equation that parses the hex's X,Z coordinates and 
+        //finds its index on the cells array
+        int index = (coordinates.Z + coordinates.X / 2) * height + coordinates.X;//+ coordinates.Z * width + coordinates.Z / 2;
+        HexCell cell = cells[index];
+        cell.color = color;
         hexMesh.Triangulate(cells);
     }
 }
