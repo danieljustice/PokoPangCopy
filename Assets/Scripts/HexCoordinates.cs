@@ -36,7 +36,7 @@ public struct HexCoordinates
 
     public static HexCoordinates FromOffsetCoordinates(int x, int z)
     {
-        return new HexCoordinates(x-z/2, z);
+        return new HexCoordinates(x, z-x/2);
     }
     //Override the to string method so we dont just print out the struct name
     public override string ToString()
