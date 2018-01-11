@@ -13,6 +13,7 @@ public class HexGrid : MonoBehaviour
     public Text cellLabelPrefab;
 
     public Color defaultColor = Color.white;
+    public Color defaultOuterColor = Color.black;
     //public Color touchedColor = Color.magenta;
     public Color[] colors;
     Canvas gridCanvas;
@@ -37,6 +38,8 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+        //hexMesh.Triangulate(cells);
+        //innerHexMesh.Triangulate(cells);
     }
 
 
@@ -63,7 +66,8 @@ public class HexGrid : MonoBehaviour
         if(colors.Length > 0)
         {
             cell.color = colors[(int)Random.Range(0, colors.Length)];
-            cell.outerColor = cell.color;
+            cell.outerColor = defaultOuterColor;
+            
         }
         else
         {
@@ -152,7 +156,7 @@ public class HexGrid : MonoBehaviour
     {
         HexCell cell = GetCell(position);
         cell.color = color;
-        cell.outerColor = color;
+        cell.outerColor = defaultOuterColor;
         hexMesh.Triangulate(cells);
         innerHexMesh.Triangulate(cells);
     }
@@ -240,7 +244,7 @@ public class HexGrid : MonoBehaviour
                         {
                             print(cellStack.Count);
                             topCell = cellStack.Pop();
-                            topCell.outerColor = topCell.color;
+                            topCell.outerColor = defaultOuterColor;
                         }
                         
                     }
@@ -254,7 +258,7 @@ public class HexGrid : MonoBehaviour
         print("end " + cellStack.Count);
         if(cellStack.Count > 2)
         {
-
+            DestroyHexes();
         }
         while(cellStack.Count != 0)
         {
@@ -262,8 +266,52 @@ public class HexGrid : MonoBehaviour
             hexCell.outerColor = hexCell.color;
         }
 
+        //set outer color back to black
+        for(int i = 0; i < cells.Length; i++)
+        {
+            cells[i].outerColor = defaultOuterColor;
+        }
         hexMesh.Triangulate(cells);
         innerHexMesh.Triangulate(cells);
     }
 
+
+    void DestroyHexes()
+    {
+        while (cellStack.Count != 0)
+        {
+            HexCell hexCell = cellStack.Pop();
+            hexCell.color = defaultColor;
+        }
+
+        PropagateNewHexes();
+    }
+
+    //Efficiency? Not today
+    void PropagateNewHexes()
+    {
+        bool finished = false;
+        while (!finished)
+        {
+            finished = true;
+            for(int i = 0; i < cells.Length; i++)
+            {
+                if (cells[i].color == defaultColor)
+                {
+                    finished = false;
+                    if (i / width < height - 1)
+                    {
+                        cells[i].color = cells[i + width].color;
+                        cells[i + width].color = defaultColor;
+                    }
+                    else
+                    {
+                        cells[i].color = colors[(int)Random.Range(0, colors.Length)];
+                    }
+                }
+            }
+
+        }
+
+    }
 }

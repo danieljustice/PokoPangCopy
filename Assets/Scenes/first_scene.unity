@@ -164,8 +164,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 60
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -870,13 +870,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef118080615f8894fb8380e3b4502032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 6
+  width: 7
   height: 6
   cellPrefab: {fileID: 114259659025465698, guid: a1cbae01c6aef984f863b15984260ee4,
     type: 2}
   cellLabelPrefab: {fileID: 114814307419722408, guid: e889da282470e7e4d8bac49af07396d0,
     type: 2}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  defaultOuterColor: {r: 0, g: 0, b: 0, a: 1}
   colors:
   - {r: 1, g: 0.884, b: 0, a: 0}
   - {r: 0, g: 0.766, b: 0, a: 0}
@@ -923,7 +924,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1068939741}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1066363631}
