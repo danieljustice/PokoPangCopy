@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class HexMesh : MonoBehaviour
+public class InnerHexMesh : MonoBehaviour
 {
     Mesh hexMesh;
     List<Vector3> vertices;
     List<int> triangles;
-    MeshCollider meshCollider;
+    //MeshCollider meshCollider;
     List<Color> colors;
 
     void Awake()
     {
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
-        meshCollider = gameObject.AddComponent<MeshCollider>();
-        //meshCollider.convex = true;
-        hexMesh.name = "Hex Mesh";
+        //meshCollider = gameObject.AddComponent<MeshCollider>();
+
+        hexMesh.name = "Inner Hex Mesh";
         vertices = new List<Vector3>();
         colors = new List<Color>();
         triangles = new List<int>();
@@ -36,21 +36,21 @@ public class HexMesh : MonoBehaviour
         hexMesh.colors = colors.ToArray();
         hexMesh.triangles = triangles.ToArray();
         hexMesh.RecalculateNormals();
-        meshCollider.sharedMesh = hexMesh;
+        //meshCollider.sharedMesh = hexMesh;
 
     }
     //loops through and creates the 6 triangles we need for a hexagon
     void Triangulate(HexCell cell)
     {
         Vector3 center = cell.transform.localPosition;
-        for(int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             AddTriangle(
                 center,
-                center + HexMetrics.corners[i],
-                center + HexMetrics.corners[i + 1]
+                center + InnerHexMetrics.corners[i],
+                center + InnerHexMetrics.corners[i + 1]
             );
-            AddTriangleColor(cell.outerColor);
+            AddTriangleColor(cell.color);
         }
     }
 

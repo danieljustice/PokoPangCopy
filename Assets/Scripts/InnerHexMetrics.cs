@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-public static class HexMetrics{
+public static class InnerHexMetrics
+{
 
     //gah, too tightly coupled, i want a smaller radius for some hexes
-    public const float outerRadius = 10f;
+    public const float outerRadius = 8f;
     public const float innerRadius = outerRadius * 0.866025404f;
 
     ////creates the vertices of a hexagon with the point facing up and down.
@@ -38,4 +39,3 @@ public static class HexMetrics{
         new Vector3(-0.5f * outerRadius, 0f, innerRadius),
     };
 }
-    
